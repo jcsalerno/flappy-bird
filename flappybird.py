@@ -49,6 +49,7 @@ class Passaro:
             deslocamento = 16
         elif deslocamento < 0:
             deslocamento -=2
+        self.y += deslocamento
 
         #Angulo do passaro
         if deslocamento < 0 or self.y < (self.altura + 50):
@@ -87,7 +88,7 @@ class Passaro:
         tela.blit(imagem_rotacionada, retangulo.topleft)
 
     def get_mask(self):
-        pygame.mask.from_surface(self.imagem)
+        return pygame.mask.from_surface(self.imagem)
 
 class Cano:
     DISTANCIA = 200
@@ -106,7 +107,7 @@ class Cano:
 
     def definir_altura(self):
         self.altura = random.randrange(50, 450)
-        self.pos_base = self.altura - self.CANO_TOPO.get_height()
+        self.pos_topo = self.altura - self.CANO_TOPO.get_height()
         self.pos_base = self.altura + self.DISTANCIA
 
     def mover(self):
@@ -148,9 +149,9 @@ class Chao:
 
 
         if self.x1 + self.LARGURA < 0:
-            self.x1 = self.x1 + self.LARGURA
+            self.x1 = self.x2 + self.LARGURA
         if self.x2 + self.LARGURA < 0:
-            self.x2 = self.x2 + self.LARGURA
+            self.x2 = self.x1 + self.LARGURA
 
     def desenhar(self, tela):
         tela.blit(self.IMAGEM, (self.x1, self.y))
@@ -202,8 +203,9 @@ def main():
             for i, passaro in enumerate(passaros):
                 if cano.colidir(passaro):
                     passaros.pop(i)
-                if not cano.passou and passaro.x cano.x:
+                if not cano.passou and passaro.x > cano.x:
                     cano.passou = True
+                    adicionar_cano = True
             cano.mover()
             if cano.x + cano.CANO_TOPO.get_width() < 0:
                 remover_canos.append(cano) 
@@ -216,4 +218,9 @@ def main():
 
         for i, passaro in enumerate(passaros):
             if (passaro.y + passaro.imagem.get_height()) > chao.y or passaro.y < 0:
-                passaros.pop(i)                       
+                passaros.pop(i)   
+
+        desenhar_tela(tela, passaros, canos, chao, pontos)                            
+
+if __name__ == '__main__':
+    main()
