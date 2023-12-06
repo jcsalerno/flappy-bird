@@ -33,3 +33,27 @@ class Passaro:
         self.tempo = 0
         self.contagem_imagem = 0
         self.imagem = IMGS[0]
+
+    def pular(self):
+        self.velocidade = -10.5
+        self.tempo = 0
+        self.altura = self.y
+
+    def mover(self):
+        #calcular deslocamento
+        self.tempo +=1
+        deslocamento = 1.5 * (self.tempo**2) + self.velocidade * self.tempo
+
+        #restringitr o deslocamento
+        if deslocamento > 16:
+            deslocamento = 16
+        elif deslocamento < 0:
+            deslocamento -=2
+
+        #Angulo do passaro
+        if deslocamento < 0 or self.y < (self.altura + 50):
+            if self.angulo < self.ROTACAO_MAXIMA:
+                self.angulo = self.ROTACAO_MAXIMA
+        else:
+            if self.angulo > -90:
+                self.angulo -= self.VELOCIDADE_ROTACAO                       
